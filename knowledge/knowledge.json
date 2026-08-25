@@ -1,0 +1,1287 @@
+{
+  "verified": [
+    {
+      "claim": "All agents have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is unique across all agents.",
+      "endpoint": "/agents",
+      "verifiedAt": "2026-08-25T18:44:20.657Z",
+      "evidence": {
+        "sampled": 8,
+        "applicable": 8,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All agents have a non-empty name.",
+      "field": "name",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The name field is a string that is never null.",
+      "endpoint": "/agents",
+      "verifiedAt": "2026-08-25T18:44:20.766Z",
+      "evidence": {
+        "sampled": 8,
+        "applicable": 8,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All agents have a non-empty slug.",
+      "field": "slug",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The slug field is a string that is never null.",
+      "endpoint": "/agents",
+      "verifiedAt": "2026-08-25T18:44:20.813Z",
+      "evidence": {
+        "sampled": 8,
+        "applicable": 8,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All agents have a non-empty platform.",
+      "field": "platform",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The platform field is a string that is never null.",
+      "endpoint": "/agents",
+      "verifiedAt": "2026-08-25T18:44:20.854Z",
+      "evidence": {
+        "sampled": 8,
+        "applicable": 8,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All agents have a non-empty agent_type.",
+      "field": "agent_type",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The agent_type field is a string that is never null.",
+      "endpoint": "/agents",
+      "verifiedAt": "2026-08-25T18:44:20.896Z",
+      "evidence": {
+        "sampled": 8,
+        "applicable": 8,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All agents have a non-empty environment.",
+      "field": "environment",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The environment field is a string that is never null.",
+      "endpoint": "/agents",
+      "verifiedAt": "2026-08-25T18:44:20.942Z",
+      "evidence": {
+        "sampled": 8,
+        "applicable": 8,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is generated uniquely for each run.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:52.524Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a non-null tenant field.",
+      "field": "tenant",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The tenant field is a string that is always present and not null.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:53.410Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a non-null source field.",
+      "field": "source",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The source field is a string that is always present and not null.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:54.180Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a non-null agent field.",
+      "field": "agent",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The agent field is a string that is always present and not null.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:55.347Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a non-null agent_id field.",
+      "field": "agent_id",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The agent_id field is a string that is always present and not null.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:56.650Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a non-null status field.",
+      "field": "status",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The status field is a string that is always present and not null.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:57.334Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All runs have a non-null model field.",
+      "field": "model",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The model field is a string that is always present and not null.",
+      "endpoint": "/runs",
+      "verifiedAt": "2026-08-25T18:44:58.009Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All policies have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is unique across all policies.",
+      "endpoint": "/policies",
+      "verifiedAt": "2026-08-25T18:45:33.559Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All policies have a non-empty name.",
+      "field": "name",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The name is a string that is never null.",
+      "endpoint": "/policies",
+      "verifiedAt": "2026-08-25T18:45:33.656Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All policies have a non-empty description.",
+      "field": "description",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The description is a string that is never null.",
+      "endpoint": "/policies",
+      "verifiedAt": "2026-08-25T18:45:33.695Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All policies have a valid version.",
+      "field": "version",
+      "predicate": "type_is",
+      "args": {
+        "type": "string"
+      },
+      "reasoning": "The version is a string.",
+      "endpoint": "/policies",
+      "verifiedAt": "2026-08-25T18:45:33.735Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'id' field is always present and unique.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The 'id' field is marked as 'string' and 'unique' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.089Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'name' field is always present and non-empty.",
+      "field": "name",
+      "predicate": "always_present",
+      "args": {},
+      "reasoning": "The 'name' field is marked as 'string' and 'never_null' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.200Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'guardrail_type' field is always present and non-empty.",
+      "field": "guardrail_type",
+      "predicate": "always_present",
+      "args": {},
+      "reasoning": "The 'guardrail_type' field is marked as 'string' and 'never_null' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.259Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'status' field is always present and non-empty.",
+      "field": "status",
+      "predicate": "always_present",
+      "args": {},
+      "reasoning": "The 'status' field is marked as 'string' and 'never_null' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.296Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'action' field is always present and non-empty.",
+      "field": "action",
+      "predicate": "always_present",
+      "args": {},
+      "reasoning": "The 'action' field is marked as 'string' and 'never_null' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.335Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'threshold' field is always present and non-negative.",
+      "field": "threshold",
+      "predicate": "non_negative",
+      "args": {},
+      "reasoning": "The 'threshold' field is marked as 'number' and 'non_negative' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.378Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'scope' field is always present and non-empty.",
+      "field": "scope",
+      "predicate": "always_present",
+      "args": {},
+      "reasoning": "The 'scope' field is marked as 'string' and 'never_null' in the documentation.",
+      "endpoint": "/guardrails",
+      "verifiedAt": "2026-08-25T18:46:10.421Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'id' field is always present and unique.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'id' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "verifiedAt": "2026-08-25T18:46:48.924Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "The 'trace_id' field is always present and unique.",
+      "field": "trace_id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'trace_id' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "verifiedAt": "2026-08-25T18:46:48.991Z",
+      "evidence": {
+        "sampled": 200,
+        "applicable": 100,
+        "pages": 2
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "Connector IDs are unique.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate IDs.",
+      "endpoint": "/connectors",
+      "verifiedAt": "2026-08-25T18:47:17.838Z",
+      "evidence": {
+        "sampled": 6,
+        "applicable": 6,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "Connector names are unique.",
+      "field": "name",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate names.",
+      "endpoint": "/connectors",
+      "verifiedAt": "2026-08-25T18:47:17.944Z",
+      "evidence": {
+        "sampled": 6,
+        "applicable": 6,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "Providers are unique.",
+      "field": "provider",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate providers.",
+      "endpoint": "/connectors",
+      "verifiedAt": "2026-08-25T18:47:17.990Z",
+      "evidence": {
+        "sampled": 6,
+        "applicable": 6,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All connections have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is unique across all connections.",
+      "endpoint": "/connections",
+      "verifiedAt": "2026-08-25T18:47:48.633Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All connections have a non-negative latency in milliseconds.",
+      "field": "latency_ms",
+      "predicate": "non_negative",
+      "args": {},
+      "reasoning": "Latency is a number that represents time, which cannot be negative.",
+      "endpoint": "/connections",
+      "verifiedAt": "2026-08-25T18:47:48.745Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All connections have a valid ISO timestamp for creation.",
+      "field": "created_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The creation timestamp is a string that represents a date and time, which is a valid ISO timestamp.",
+      "endpoint": "/connections",
+      "verifiedAt": "2026-08-25T18:47:48.816Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All connections have a valid ISO timestamp for update.",
+      "field": "updated_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The update timestamp is a string that represents a date and time, which is a valid ISO timestamp.",
+      "endpoint": "/connections",
+      "verifiedAt": "2026-08-25T18:47:48.855Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is generated uniquely for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.547Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a non-null workspace ID.",
+      "field": "workspace_id",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The workspace ID is a string that is always provided for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.646Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a non-null alert reference.",
+      "field": "alert_ref",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The alert reference is a string that is always provided for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.685Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a non-null severity.",
+      "field": "severity",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The severity is a string that is always provided for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.730Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a non-null title.",
+      "field": "title",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The title is a string that is always provided for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.763Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a non-null description.",
+      "field": "description",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The description is a string that is always provided for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.800Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All alerts have a non-null source.",
+      "field": "source",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The source is a string that is always provided for each alert.",
+      "endpoint": "/alerts",
+      "verifiedAt": "2026-08-25T18:48:23.840Z",
+      "evidence": {
+        "sampled": 4,
+        "applicable": 4,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is generated uniquely for each token.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.090Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 10,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a non-empty name.",
+      "field": "name",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The name field is a string that is required to be present and not null.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.190Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 10,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a non-empty display hint.",
+      "field": "display_hint",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The display hint field is a string that is required to be present and not null.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.224Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 10,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a non-empty scopes array.",
+      "field": "scopes",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The scopes field is an array that is required to be present and not null.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.262Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 10,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a valid ISO timestamp for created_at.",
+      "field": "created_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The created_at field is a string that is formatted as an ISO timestamp.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.297Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 10,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a valid ISO timestamp for last_used_at.",
+      "field": "last_used_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The last_used_at field is a string that is formatted as an ISO timestamp.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.339Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 7,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All API Access Tokens have a valid ISO timestamp for expires_at.",
+      "field": "expires_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The expires_at field is a string that is formatted as an ISO timestamp.",
+      "endpoint": "/workspaces/api-keys",
+      "verifiedAt": "2026-08-25T18:48:59.382Z",
+      "evidence": {
+        "sampled": 10,
+        "applicable": 1,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a unique ID.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The ID is a string that is generated as a UUID, which is guaranteed to be unique.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:40.997Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a non-negative limit value.",
+      "field": "limit_value",
+      "predicate": "non_negative",
+      "args": {},
+      "reasoning": "Limit values are typically used to set a maximum, so they should never be negative.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:41.126Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a non-negative used value.",
+      "field": "used_value",
+      "predicate": "non_negative",
+      "args": {},
+      "reasoning": "Used values are typically used to track how much has been used, so they should never be negative.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:41.159Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a non-negative remaining value.",
+      "field": "remaining_value",
+      "predicate": "non_negative",
+      "args": {},
+      "reasoning": "Remaining values are typically used to track how much is left, so they should never be negative.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:41.193Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a valid ISO timestamp for the created_at field.",
+      "field": "created_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "ISO timestamps are a standard format for representing dates and times, so they should always be valid.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:41.226Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a valid ISO timestamp for the updated_at field.",
+      "field": "updated_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "ISO timestamps are a standard format for representing dates and times, so they should always be valid.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:41.266Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All quota entries have a valid ISO timestamp for the resets_at field.",
+      "field": "resets_at",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "ISO timestamps are a standard format for representing dates and times, so they should always be valid.",
+      "endpoint": "/quota",
+      "verifiedAt": "2026-08-25T18:49:41.302Z",
+      "evidence": {
+        "sampled": 3,
+        "applicable": 3,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a unique `id`.",
+      "field": "id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The `id` field is a string and is used as a unique identifier for each approval.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:39.958Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a non-null `status`.",
+      "field": "status",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The `status` field is a string and is required to indicate the approval status.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:40.084Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a non-null `source`.",
+      "field": "source",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The `source` field is a string and is required to indicate the source of the approval.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:40.127Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a non-null `action`.",
+      "field": "action",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The `action` field is a string and is required to indicate the action taken.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:40.168Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a non-null `resource`.",
+      "field": "resource",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The `resource` field is a string and is required to indicate the resource affected.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:40.206Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a non-null `risk`.",
+      "field": "risk",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The `risk` field is a string and is required to indicate the risk level of the approval.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:40.250Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    },
+    {
+      "claim": "All rows have a non-null `requested_by_user_id`.",
+      "field": "requested_by_user_id",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The `requested_by_user_id` field is a string and is required to indicate the user who requested the approval.",
+      "endpoint": "/approvals",
+      "verifiedAt": "2026-08-25T18:50:40.292Z",
+      "evidence": {
+        "sampled": 5,
+        "applicable": 5,
+        "pages": 1
+      },
+      "confirmations": 1
+    }
+  ],
+  "rejected": [
+    {
+      "claim": "All agents have a non-empty description.",
+      "field": "description",
+      "predicate": "never_null",
+      "args": {},
+      "reasoning": "The description field is a string that is never null.",
+      "endpoint": "/agents",
+      "why": "1/8 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a01f64-b4e1-7c7f-9528-f451a09c69c4",
+          "value": null
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:44:20.814Z"
+    },
+    {
+      "claim": "All policies have a valid risk level.",
+      "field": "risk_level",
+      "predicate": "enum_subset",
+      "args": {
+        "values": [
+          "Medium",
+          "Low",
+          "High"
+        ]
+      },
+      "reasoning": "The risk level is a string that must be one of the specified values.",
+      "endpoint": "/policies",
+      "why": "only 4 rows — too few to claim a field can hold nothing else",
+      "disprovedAt": "2026-08-25T18:45:33.700Z"
+    },
+    {
+      "claim": "All policies have a valid status.",
+      "field": "status",
+      "predicate": "enum_subset",
+      "args": {
+        "values": [
+          "Active",
+          "Inactive"
+        ]
+      },
+      "reasoning": "The status is a string that must be one of the specified values.",
+      "endpoint": "/policies",
+      "why": "overfit to the sample — the manual documents 4 values for this field and the proposal omits [\"Warning\",\"Pending Review\"]",
+      "disprovedAt": "2026-08-25T18:45:33.700Z"
+    },
+    {
+      "claim": "All policies have a valid enforcement level.",
+      "field": "enforcement",
+      "predicate": "enum_subset",
+      "args": {
+        "values": [
+          "Warn",
+          "Log Only",
+          "Block"
+        ]
+      },
+      "reasoning": "The enforcement level is a string that must be one of the specified values.",
+      "endpoint": "/policies",
+      "why": "overfit to the sample — the manual documents 8 values for this field and the proposal omits [\"Require Approval\",\"Escalate\",\"Mask\",\"Route\",\"Throttle\"]",
+      "disprovedAt": "2026-08-25T18:45:33.700Z"
+    },
+    {
+      "claim": "The 'guardrail_id' field is always present and unique.",
+      "field": "guardrail_id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'guardrail_id' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "why": "99/100 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03a3a-edb5-7716-b889-96f7d292fb01",
+          "value": "01a01cc7-1861-705c-a917-8370ceea71ae"
+        },
+        {
+          "id": "01a03a37-9972-78c5-9413-9005a8c07506",
+          "value": "01a01cc7-1861-705c-a917-8370ceea71ae"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:46:48.929Z"
+    },
+    {
+      "claim": "The 'guardrail_name' field is always present and unique.",
+      "field": "guardrail_name",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'guardrail_name' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "why": "99/100 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03a3a-edb5-7716-b889-96f7d292fb01",
+          "value": "PII scan"
+        },
+        {
+          "id": "01a03a37-9972-78c5-9413-9005a8c07506",
+          "value": "PII scan"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:46:48.929Z"
+    },
+    {
+      "claim": "The 'guardrail_type' field is always present and unique.",
+      "field": "guardrail_type",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'guardrail_type' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "why": "99/100 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03a3a-edb5-7716-b889-96f7d292fb01",
+          "value": "PII"
+        },
+        {
+          "id": "01a03a37-9972-78c5-9413-9005a8c07506",
+          "value": "PII"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:46:48.930Z"
+    },
+    {
+      "claim": "The 'agent_id' field is always present and unique.",
+      "field": "agent_id",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'agent_id' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "why": "97/100 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03a37-9972-78c5-9413-9005a8c07506",
+          "value": "01a01cb1-edf1-7089-91ad-15ec171964cd"
+        },
+        {
+          "id": "01a03a37-04ea-772c-9ad4-e050e729ae1c",
+          "value": "01a01cb1-e908-7d12-85bc-775206d3a224"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:46:48.930Z"
+    },
+    {
+      "claim": "The 'agent_name' field is always present and unique.",
+      "field": "agent_name",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual states that 'agent_name' is a string and unique.",
+      "endpoint": "/guardrails/events",
+      "why": "97/100 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03a37-9972-78c5-9413-9005a8c07506",
+          "value": "Azure Support Triage"
+        },
+        {
+          "id": "01a03a37-04ea-772c-9ad4-e050e729ae1c",
+          "value": "AWS Claims Triage"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:46:48.930Z"
+    },
+    {
+      "claim": "Connector types are unique.",
+      "field": "connector_type",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate types.",
+      "endpoint": "/connectors",
+      "why": "1/6 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03464-610e-7977-a359-7bf93c17937b",
+          "value": "API"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:47:17.945Z"
+    },
+    {
+      "claim": "Risk levels are unique.",
+      "field": "risk_level",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate risk levels.",
+      "endpoint": "/connectors",
+      "why": "3/6 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03464-61c2-71b6-9dfa-30ecf7e794c8",
+          "value": "Low"
+        },
+        {
+          "id": "01a03464-610e-7977-a359-7bf93c17937b",
+          "value": "High"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:47:17.990Z"
+    },
+    {
+      "claim": "Statuses are unique.",
+      "field": "status",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate statuses.",
+      "endpoint": "/connectors",
+      "why": "4/6 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03464-5ff8-7939-9368-70f61ae992b8",
+          "value": "Active"
+        },
+        {
+          "id": "01a03464-61c2-71b6-9dfa-30ecf7e794c8",
+          "value": "Active"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:47:17.990Z"
+    },
+    {
+      "claim": "Access levels are unique.",
+      "field": "access",
+      "predicate": "unique",
+      "args": {},
+      "reasoning": "The manual does not specify uniqueness, but the sample shows no duplicate access levels.",
+      "endpoint": "/connectors",
+      "why": "4/6 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a03464-61c2-71b6-9dfa-30ecf7e794c8",
+          "value": "Read"
+        },
+        {
+          "id": "01a03464-5fa2-7382-b8f5-5c9ac4492cf2",
+          "value": "Read-Write"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:47:17.990Z"
+    },
+    {
+      "claim": "All connections have a valid ISO timestamp for creation by.",
+      "field": "created_by",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The creation by timestamp is a string that represents a date and time, which is a valid ISO timestamp.",
+      "endpoint": "/connections",
+      "why": "4/4 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a01cb3-1df7-791f-9be4-cf27a1887294",
+          "value": "ops@fulcrumops.com"
+        },
+        {
+          "id": "01a01cb3-1f5e-7801-836d-98797af25b8d",
+          "value": "ops@fulcrumops.com"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:47:48.855Z"
+    },
+    {
+      "claim": "All connections have a valid ISO timestamp for update by.",
+      "field": "updated_by",
+      "predicate": "iso_timestamp",
+      "args": {},
+      "reasoning": "The update by timestamp is a string that represents a date and time, which is a valid ISO timestamp.",
+      "endpoint": "/connections",
+      "why": "4/4 rows break it",
+      "counterexamples": [
+        {
+          "id": "01a01cb3-1df7-791f-9be4-cf27a1887294",
+          "value": "ops@fulcrumops.com"
+        },
+        {
+          "id": "01a01cb3-1f5e-7801-836d-98797af25b8d",
+          "value": "ops@fulcrumops.com"
+        }
+      ],
+      "disprovedAt": "2026-08-25T18:47:48.855Z"
+    }
+  ],
+  "coverage": {
+    "/agents": {
+      "rounds": 1,
+      "rows": 8,
+      "verified": 6,
+      "rejected": 1,
+      "lastSeen": "2026-08-25T18:44:20.943Z"
+    },
+    "/runs": {
+      "rounds": 1,
+      "rows": 100,
+      "verified": 7,
+      "rejected": 0,
+      "lastSeen": "2026-08-25T18:44:58.009Z"
+    },
+    "/policies": {
+      "rounds": 1,
+      "rows": 4,
+      "verified": 4,
+      "rejected": 3,
+      "lastSeen": "2026-08-25T18:45:33.736Z"
+    },
+    "/guardrails": {
+      "rounds": 1,
+      "rows": 3,
+      "verified": 7,
+      "rejected": 0,
+      "lastSeen": "2026-08-25T18:46:10.421Z"
+    },
+    "/guardrails/events": {
+      "rounds": 1,
+      "rows": 100,
+      "verified": 2,
+      "rejected": 5,
+      "lastSeen": "2026-08-25T18:46:48.991Z"
+    },
+    "/connectors": {
+      "rounds": 1,
+      "rows": 6,
+      "verified": 3,
+      "rejected": 4,
+      "lastSeen": "2026-08-25T18:47:17.990Z"
+    },
+    "/connections": {
+      "rounds": 1,
+      "rows": 4,
+      "verified": 4,
+      "rejected": 2,
+      "lastSeen": "2026-08-25T18:47:48.855Z"
+    },
+    "/alerts": {
+      "rounds": 1,
+      "rows": 4,
+      "verified": 7,
+      "rejected": 0,
+      "lastSeen": "2026-08-25T18:48:23.840Z"
+    },
+    "/workspaces/api-keys": {
+      "rounds": 1,
+      "rows": 10,
+      "verified": 7,
+      "rejected": 0,
+      "lastSeen": "2026-08-25T18:48:59.383Z"
+    },
+    "/workspaces/users": {
+      "rounds": 1,
+      "rows": 2
+    },
+    "/quota": {
+      "rounds": 1,
+      "rows": 3,
+      "verified": 7,
+      "rejected": 0,
+      "lastSeen": "2026-08-25T18:49:41.303Z"
+    },
+    "/approvals": {
+      "rounds": 1,
+      "rows": 5,
+      "verified": 7,
+      "rejected": 0,
+      "lastSeen": "2026-08-25T18:50:40.292Z"
+    }
+  },
+  "rounds": 12,
+  "updatedAt": "2026-08-25T18:50:40.295Z"
+}

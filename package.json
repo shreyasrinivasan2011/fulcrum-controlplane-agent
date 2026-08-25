@@ -1,0 +1,23 @@
+{
+  "name": "fulcrum-controlplane-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "An agent that connects to the Fulcrum Ops control plane and exercises its API.",
+  "main": "src/index.js",
+  "bin": {
+    "fulcrum": "./bin/fulcrum.js"
+  },
+  "scripts": {
+    "connect": "node --env-file-if-exists=.env bin/fulcrum.js connect",
+    "test": "node --env-file-if-exists=.env --test tests/smoke.test.js tests/documented.test.js tests/learned.test.js",
+    "test:smoke": "node --env-file-if-exists=.env --test tests/smoke.test.js",
+    "dashboard": "node bin/dashboard.js",
+    "test:pack": "node --env-file-if-exists=.env --test tests/documented.test.js",
+    "learn": "node bin/learn.js",
+    "test:learned": "node --env-file-if-exists=.env --test tests/learned.test.js"
+  },
+  "engines": {
+    "node": ">=20.6"
+  }
+}

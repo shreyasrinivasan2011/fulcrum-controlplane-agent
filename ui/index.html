@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control-plane agent — live</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page:        #f9f9f7;
+    --surface:     #fcfcfb;
+    --ink:         #0b0b0b;
+    --ink-2:       #52514e;
+    --muted:       #898781;
+    --grid:        #e1e0d9;
+    --baseline:    #c3c2b7;
+    --border:      rgba(11,11,11,.10);
+    --series-1:    #2a78d6;
+    --series-wash: rgba(42,120,214,.14);
+    --good:        #0ca30c;
+    --warning:     #fab219;
+    --critical:    #d03b3b;
+    --good-ink:    #006300;
+    --ghost:       rgba(11,11,11,.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page:        #0d0d0d;
+      --surface:     #1a1a19;
+      --ink:         #ffffff;
+      --ink-2:       #c3c2b7;
+      --muted:       #898781;
+      --grid:        #2c2c2a;
+      --baseline:    #383835;
+      --border:      rgba(255,255,255,.10);
+      --series-1:    #3987e5;
+      --series-wash: rgba(57,135,229,.18);
+      --good-ink:    #0ca30c;
+      --ghost:       rgba(255,255,255,.05);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface: #1a1a19; --ink: #fff; --ink-2: #c3c2b7;
+    --grid: #2c2c2a; --baseline: #383835; --border: rgba(255,255,255,.10);
+    --series-1: #3987e5; --series-wash: rgba(57,135,229,.18); --good-ink: #0ca30c;
+    --ghost: rgba(255,255,255,.05);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--page); color: var(--ink);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--series-1); }
+
+  /* ---------- header ---------- */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+    padding: 14px 24px; background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .mark {
+    width: 30px; height: 30px; border-radius: 8px; background: var(--series-1);
+    display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 15px; flex: none;
+  }
+  .title { font-weight: 650; letter-spacing: -.01em; }
+  .title small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; letter-spacing: 0; }
+  .spacer { flex: 1 1 auto; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 5px 11px; border: 1px solid var(--border); border-radius: 999px;
+    font-size: 12.5px; color: var(--ink-2); background: var(--surface);
+  }
+  .pill b { color: var(--ink); font-weight: 600; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.live { background: var(--good); box-shadow: 0 0 0 0 rgba(12,163,12,.5); animation: pulse 2s infinite; }
+  .dot.bad  { background: var(--critical); animation: none; }
+  @keyframes pulse {
+    70%  { box-shadow: 0 0 0 7px rgba(12,163,12,0); }
+    100% { box-shadow: 0 0 0 0 rgba(12,163,12,0); }
+  }
+  button {
+    font: inherit; font-size: 13px; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 6px 13px; cursor: pointer;
+  }
+  button:hover:not(:disabled) { background: var(--ghost); }
+  button:disabled { opacity: .5; cursor: default; }
+  select {
+    font: inherit; font-size: 13px; color: var(--ink); background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px; padding: 6px 9px; cursor: pointer; max-width: 240px;
+  }
+  button.primary { background: var(--series-1); border-color: var(--series-1); color: #fff; }
+  button.primary:hover:not(:disabled) { filter: brightness(1.08); }
+
+  /* ---------- layout ---------- */
+  main { padding: 22px 24px 60px; max-width: 1500px; margin: 0 auto; }
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(184px, 1fr)); gap: 12px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 14px; margin-top: 14px; }
+  .grid-side { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 14px; margin-top: 14px; }
+  @media (max-width: 980px) { .grid-side { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px; min-width: 0;
+  }
+  .card > h2 {
+    margin: 0 0 2px; font-size: 13px; font-weight: 600; letter-spacing: -.005em;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card > h2 .spacer { flex: 1; }
+  .sub { margin: 0 0 14px; font-size: 12px; color: var(--muted); }
+
+  /* stat tile */
+  .kpi .label { font-size: 12px; color: var(--ink-2); }
+  .kpi .value { font-size: 30px; font-weight: 600; letter-spacing: -.02em; margin-top: 4px; line-height: 1.1; }
+  .kpi .delta { font-size: 12px; color: var(--muted); margin-top: 3px; display: flex; align-items: center; gap: 5px; }
+  .up   { color: var(--good-ink); font-weight: 600; }
+  .down { color: var(--critical); font-weight: 600; }
+
+  /* tables */
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+  th {
+    text-align: left; font-weight: 500; color: var(--muted); font-size: 11px;
+    text-transform: uppercase; letter-spacing: .05em; padding: 0 10px 7px 0;
+    border-bottom: 1px solid var(--grid); white-space: nowrap;
+  }
+  td { padding: 7px 10px 7px 0; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  tr:last-child td { border-bottom: 0; }
+  .num { font-variant-numeric: tabular-nums; text-align: right; padding-right: 14px; }
+  th.num:last-child, td.num:last-child { padding-right: 0; }
+  .scroll { max-height: 340px; overflow: auto; margin-right: -6px; padding-right: 6px; }
+  .wrap-x { overflow-x: auto; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11.5px; }
+  .trunc { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* status: icon + label, never colour alone */
+  .status { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .status svg { flex: none; }
+  .s-good     { color: var(--good-ink); }
+  .s-critical { color: var(--critical); }
+  .s-warning  { color: var(--ink-2); }
+  .s-muted    { color: var(--muted); }
+
+  .new { animation: flash 1.4s ease-out; }
+  @keyframes flash { from { background: var(--series-wash); } to { background: transparent; } }
+
+  /* charts */
+  .chart { width: 100%; display: block; overflow: visible; }
+  .tip {
+    position: fixed; pointer-events: none; z-index: 40; opacity: 0; transition: opacity .1s;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.14); white-space: nowrap;
+  }
+  .tip b { font-variant-numeric: tabular-nums; }
+  .bar-row { display: grid; grid-template-columns: 148px 1fr 62px; gap: 12px; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--grid); font-size: 12.5px; }
+  .bar-row:last-child { border-bottom: 0; }
+  .bar-track { display: block; background: var(--ghost); border-radius: 4px; height: 14px; }
+  .bar-fill  { display: block; background: var(--series-1); border-radius: 4px; height: 100%; min-width: 3px; transition: width .4s; }
+  .bar-row .name { color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar-row .name small { display: block; color: var(--muted); font-size: 11px; }
+  .bar-row .val { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink); }
+  .bar-row .val small { display: block; color: var(--muted); font-size: 11px; font-weight: 400; }
+
+  /* tests */
+  .test-line { display: flex; gap: 9px; padding: 4px 0; font-size: 12.5px; align-items: baseline; }
+  .test-line.suite { font-weight: 600; margin-top: 9px; }
+  .test-line .glyph { width: 14px; flex: none; text-align: center; }
+  .test-name { color: var(--ink-2); }
+  .test-line.suite .test-name { color: var(--ink); }
+  .empty { color: var(--muted); font-size: 12.5px; padding: 10px 0; }
+  .inv { padding: 8px 0; border-bottom: 1px solid var(--grid); font-size: 12.5px; }
+  .inv:last-child { border-bottom: 0; }
+  .inv-head { display: flex; gap: 8px; align-items: baseline; }
+  .inv-stmt { color: var(--ink); }
+  .inv-meta { color: var(--muted); font-size: 11px; margin-top: 2px; }
+  .inv-group { font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--muted); margin: 14px 0 4px; }
+  .inv-group:first-child { margin-top: 0; }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--ink-2); margin-bottom: 10px; align-items: center; }
+  .swatch { width: 10px; height: 10px; border-radius: 3px; background: var(--series-1); display: inline-block; margin-right: 6px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="mark">F</div>
+  <div class="title">Control-plane agent <small id="origin">connecting…</small></div>
+  <div class="spacer"></div>
+  <span class="pill"><span class="dot" id="conn-dot"></span><span id="conn-text">connecting…</span></span>
+  <span class="pill" id="ws-pill" hidden>workspace <b id="ws"></b> · <span id="role"></span></span>
+  <span class="pill" id="req-pill" hidden><b id="req-count">0</b> requests · p95 <b id="req-p95">–</b></span>
+  <button id="theme">◐ theme</button>
+  <button id="refresh">↻ refresh</button>
+</header>
+
+<main>
+  <section class="kpis" id="kpis"></section>
+
+  <div class="grid-2">
+    <section class="card">
+      <h2>Runs per day<span class="spacer"></span><span class="sub" style="margin:0" id="series-window"></span></h2>
+      <p class="sub">Reported by the control plane over the last 30 days.</p>
+      <div id="line-chart"></div>
+    </section>
+
+    <section class="card">
+      <h2>Runs by model<span class="spacer"></span><span class="sub" style="margin:0">last 30 days</span></h2>
+      <p class="sub">Length carries the magnitude; every bar is one hue.</p>
+      <div id="model-chart"></div>
+    </section>
+  </div>
+
+  <div class="grid-side">
+    <section class="card">
+      <h2><span class="dot live" id="feed-dot"></span>Live run feed<span class="spacer"></span>
+        <span class="sub" style="margin:0"><span id="feed-count">0</span> received</span></h2>
+      <p class="sub">Server-sent events from <span class="mono">/api/v1/runs/stream</span>, as they happen.</p>
+      <div class="scroll"><table>
+        <thead><tr><th>Time</th><th>Agent</th><th>Status</th><th>Model</th>
+          <th class="num">Tokens</th><th class="num">Latency</th><th>Policy</th></tr></thead>
+        <tbody id="feed"><tr><td colspan="7" class="empty">waiting for the first run…</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2>Agent request log<span class="spacer"></span>
+        <span class="sub" style="margin:0">p50 <span id="stat-p50">–</span> · p95 <span id="stat-p95">–</span></span></h2>
+      <p class="sub">Every call this agent has made, with the status and latency it saw.</p>
+      <div class="scroll"><table>
+        <thead><tr><th>Method</th><th>Path</th><th class="num">Status</th><th class="num">ms</th></tr></thead>
+        <tbody id="log"></tbody>
+      </table></div>
+    </section>
+  </div>
+
+  <div class="grid-side">
+    <section class="card">
+      <h2>Agents<span class="spacer"></span><span class="sub" style="margin:0" id="agent-count"></span></h2>
+      <p class="sub">Everything registered in this workspace.</p>
+      <div class="wrap-x"><table>
+        <thead><tr><th>Name</th><th>Environment</th><th>Status</th><th>Risk</th><th>Model</th>
+          <th class="num">Runs 30d</th><th class="num">Success</th></tr></thead>
+        <tbody id="agents"></tbody>
+      </table></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="dot" id="model-dot"></span>What the agent has learned<span class="spacer"></span>
+        <span class="sub" style="margin:0" id="learn-meta">—</span></h2>
+      <p class="sub">Invariants a local model proposed and the agent verified against live data.
+        Nothing here was written by hand.</p>
+      <div class="scroll" id="knowledge"><div class="empty">loading…</div></div>
+    </section>
+
+    <section class="card">
+      <h2>Test suite<span class="spacer"></span>
+        <select id="pack" aria-label="Which suite to run">
+          <option value="smoke">Smoke — API contract</option>
+          <option value="documented">Documented behaviour — from the manual</option>
+          <option value="learned">Learned — self-taught invariants</option>
+          <option value="all">All three packs</option>
+        </select>
+        <button id="run-tests" class="primary">▶ run tests</button></h2>
+      <p class="sub" id="pack-blurb">Contract tests against the live control plane. Read-only.</p>
+      <div id="test-summary" class="sub" hidden></div>
+      <div class="scroll" id="tests"><div class="empty">not run yet.</div></div>
+    </section>
+  </div>
+</main>
+
+<div class="tip" id="tip"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmt = new Intl.NumberFormat();
+const time = (iso) => new Date(iso).toLocaleTimeString(undefined, { hour12: false });
+
+/* ---------- status: an icon and a word, never colour alone ---------- */
+const GLYPH = {
+  good:     '<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 6.4 4.6 9 10 3.2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  critical: '<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M3 3l6 6M9 3l-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  warning:  '<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 1.8 11 10H1z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>',
+  muted:    '<svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
+};
+function statusCell(label) {
+  const key = { Completed: 'good', Active: 'good', Allowed: 'good',
+                Failed: 'critical', Error: 'critical', Blocked: 'critical', Violation: 'critical',
+                'Pending Review': 'warning', Pending: 'warning', Flagged: 'warning' }[label] || 'muted';
+  return `<span class="status s-${key}">${GLYPH[key]}${label ?? '—'}</span>`;
+}
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+
+/* ---------- stat tiles ---------- */
+function tile({ label, value, delta, deltaGood }) {
+  const arrow = delta == null ? '' :
+    `<span class="${deltaGood === null ? '' : deltaGood ? 'up' : 'down'}">${delta}</span>`;
+  return `<div class="card kpi"><div class="label">${esc(label)}</div>
+    <div class="value">${esc(value)}</div><div class="delta">${arrow}</div></div>`;
+}
+
+function renderKpis(s) {
+  const m = s.metrics || {}, rs = s.runsSummary || {}, a = s.agentSummary || {}, al = s.alerts || {};
+  const pct = (n) => (n == null ? '–' : `${n.toFixed(1)}%`);
+  $('kpis').innerHTML = [
+    tile({ label: 'Agents', value: fmt.format(a.total ?? 0),
+           delta: `${a.active ?? 0} active · ${a.pending_approval ?? 0} pending review`, deltaGood: null }),
+    tile({ label: 'Runs · 30 days', value: m.total_runs?.display ?? fmt.format(m.total_runs?.value ?? 0),
+           delta: `${fmt.format(rs.total_runs ?? 0)} in the last 24h`, deltaGood: null }),
+    tile({ label: 'Success rate · 24h', value: pct(rs.success_rate),
+           delta: rs.success_rate_delta_points == null ? '' :
+             `${rs.success_rate_delta_points >= 0 ? '▲' : '▼'} ${Math.abs(rs.success_rate_delta_points).toFixed(1)} pts vs prior`,
+           deltaGood: (rs.success_rate_delta_points ?? 0) >= 0 }),
+    tile({ label: 'Avg latency · 24h', value: rs.avg_latency_seconds == null ? '–' : `${rs.avg_latency_seconds.toFixed(2)}s`,
+           delta: rs.avg_latency_delta_seconds == null ? '' :
+             `${rs.avg_latency_delta_seconds <= 0 ? '▼' : '▲'} ${Math.abs(rs.avg_latency_delta_seconds).toFixed(2)}s vs prior`,
+           deltaGood: (rs.avg_latency_delta_seconds ?? 0) <= 0 }),
+    tile({ label: 'Policy violations · 30d', value: fmt.format(a.policy_violations_30d ?? 0),
+           delta: `${s.policies?.total ?? 0} policies in force`, deltaGood: null }),
+    tile({ label: 'Open alerts', value: fmt.format(al.open ?? 0),
+           delta: `${al.critical ?? 0} critical · ${al.acknowledged ?? 0} acknowledged`,
+           deltaGood: (al.critical ?? 0) === 0 }),
+  ].join('');
+}
+
+/* ---------- line chart: one series, sequential hue, crosshair tooltip ---------- */
+function renderLine(series) {
+  const host = $('line-chart');
+  const runs = (series?.series || []).find(s => s.metric === 'runs') || (series?.series || [])[0];
+  if (!runs?.points?.length) { host.innerHTML = '<div class="empty">no series returned.</div>'; return; }
+  $('series-window').textContent = series.interval || '';
+
+  const pts = runs.points;
+  const W = 640, H = 220, L = 46, R = 12, T = 12, B = 26;
+  const max = Math.max(...pts.map(p => p.value), 1);
+  const nice = niceMax(max);
+  const x = (i) => L + (i / Math.max(1, pts.length - 1)) * (W - L - R);
+  const y = (v) => T + (1 - v / nice) * (H - T - B);
+
+  const line = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(p.value).toFixed(1)}`).join(' ');
+  const area = `${line} L${x(pts.length - 1).toFixed(1)} ${y(0)} L${x(0).toFixed(1)} ${y(0)} Z`;
+
+  const ticks = [0, .25, .5, .75, 1].map(f => Math.round(nice * f));
+  const grid = ticks.map(v => `
+    <line x1="${L}" x2="${W - R}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--grid)" stroke-width="1"/>
+    <text x="${L - 8}" y="${(y(v) + 3.5).toFixed(1)}" text-anchor="end" font-size="10.5"
+          fill="var(--muted)" style="font-variant-numeric:tabular-nums">${compact(v)}</text>`).join('');
+
+  // Label the ends and the middle only — never every point.
+  const labelAt = [0, Math.floor(pts.length / 2), pts.length - 1];
+  const xLabels = labelAt.map(i => `<text x="${x(i).toFixed(1)}" y="${H - 6}" text-anchor="${i === 0 ? 'start' : i === pts.length - 1 ? 'end' : 'middle'}"
+      font-size="10.5" fill="var(--muted)">${esc(pts[i].label)}</text>`).join('');
+
+  host.innerHTML = `<svg class="chart" viewBox="0 0 ${W} ${H}" role="img"
+      aria-label="Runs per day over the last 30 days, peaking at ${compact(max)} runs">
+    ${grid}
+    <path d="${area}" fill="var(--series-wash)"/>
+    <path d="${line}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <line id="cross" x1="0" x2="0" y1="${T}" y2="${H - B}" stroke="var(--baseline)" stroke-width="1" opacity="0"/>
+    <circle id="knob" r="4.5" fill="var(--series-1)" stroke="var(--surface)" stroke-width="2" opacity="0"/>
+    <line x1="${L}" x2="${W - R}" y1="${y(0)}" y2="${y(0)}" stroke="var(--baseline)" stroke-width="1"/>
+    ${xLabels}
+    <rect id="hit" x="${L}" y="${T}" width="${W - L - R}" height="${H - T - B}" fill="transparent"/>
+  </svg>`;
+
+  const svg = host.querySelector('svg'), hit = host.querySelector('#hit');
+  const cross = host.querySelector('#cross'), knob = host.querySelector('#knob'), tip = $('tip');
+  hit.addEventListener('pointermove', (e) => {
+    const box = svg.getBoundingClientRect();
+    const sx = (e.clientX - box.left) / box.width * W;
+    const i = Math.max(0, Math.min(pts.length - 1, Math.round((sx - L) / (W - L - R) * (pts.length - 1))));
+    const p = pts[i];
+    cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('opacity', '.7');
+    knob.setAttribute('cx', x(i)); knob.setAttribute('cy', y(p.value)); knob.setAttribute('opacity', '1');
+    tip.innerHTML = `${esc(p.label)} · <b>${fmt.format(p.value)}</b> runs`;
+    tip.style.opacity = '1';
+    tip.style.left = Math.min(window.innerWidth - tip.offsetWidth - 12, e.clientX + 14) + 'px';
+    tip.style.top = (e.clientY - 34) + 'px';
+  });
+  hit.addEventListener('pointerleave', () => {
+    cross.setAttribute('opacity', '0'); knob.setAttribute('opacity', '0'); $('tip').style.opacity = '0';
+  });
+}
+
+const compact = (n) => n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : String(n);
+function niceMax(v) {
+  const mag = Math.pow(10, Math.floor(Math.log10(v)));
+  return Math.ceil(v / mag * 2) / 2 * mag;
+}
+
+/* ---------- model bars: magnitude by length, one hue ---------- */
+function renderModels(models) {
+  const host = $('model-chart');
+  if (!models?.length) { host.innerHTML = '<div class="empty">no model breakdown returned.</div>'; return; }
+  const max = Math.max(...models.map(m => m.runs), 1);
+  host.innerHTML = models.map(m => `
+    <div class="bar-row" title="${esc(m.model)} — ${fmt.format(m.runs)} runs, ${m.success_rate_percent?.toFixed(1)}% success">
+      <span class="name">${esc(m.model)}<small>${m.agent_count} agent${m.agent_count === 1 ? '' : 's'} · ${
+        m.avg_latency_seconds == null ? 'no latency' : m.avg_latency_seconds.toFixed(2) + 's avg'} · ${
+        m.cost_display ?? '—'}</small></span>
+      <span class="bar-track"><span class="bar-fill" style="width:${(m.runs / max * 100).toFixed(1)}%"></span></span>
+      <span class="val">${compact(m.runs)}<small>${
+        m.success_rate_percent == null ? '—' : m.success_rate_percent.toFixed(0) + '% ok'}</small></span>
+    </div>`).join('');
+}
+
+/* ---------- tables ---------- */
+function renderAgents(agents) {
+  $('agent-count').textContent = `${agents.length} registered`;
+  $('agents').innerHTML = agents.map(a => `<tr>
+    <td>${esc(a.name)}</td><td>${esc(a.environment)}</td>
+    <td>${statusCell(a.status)}</td><td>${esc(a.risk)}</td>
+    <td class="mono">${esc(a.model || '—')}</td>
+    <td class="num">${fmt.format(a.metrics?.runs_30d ?? 0)}</td>
+    <td class="num">${a.metrics?.success_rate_30d == null ? '—' : a.metrics.success_rate_30d.toFixed(1) + '%'}</td>
+  </tr>`).join('');
+}
+
+function renderLog(telemetry, stats) {
+  $('stat-p50').textContent = `${stats.p50Ms}ms`;
+  $('stat-p95').textContent = `${stats.p95Ms}ms`;
+  $('req-count').textContent = stats.requests;
+  $('req-p95').textContent = `${stats.p95Ms}ms`;
+  $('req-pill').hidden = false;
+  $('log').innerHTML = telemetry.slice().reverse().map(t => `<tr>
+    <td class="mono">${esc(t.method)}</td>
+    <td class="mono trunc" title="${esc(t.path)}">${esc(t.path)}</td>
+    <td class="num">${statusCell(t.status >= 200 && t.status < 300 ? String(t.status) : String(t.status))
+      .replace(/s-muted/, t.status >= 400 || t.status === 0 ? 's-critical' : 's-good')
+      .replace(GLYPH.muted, t.status >= 400 || t.status === 0 ? GLYPH.critical : GLYPH.good)}</td>
+    <td class="num">${Math.round(t.durationMs)}</td>
+  </tr>`).join('');
+}
+
+function renderRuns(runs) {
+  if (!runs.length) return;
+  $('feed').innerHTML = runs.map(r => runRow(r, false)).join('');
+  feedCount = runs.length;
+  $('feed-count').textContent = feedCount;
+}
+
+function runRow(r, isNew) {
+  return `<tr class="${isNew ? 'new' : ''}">
+    <td class="mono">${time(r.occurred_at)}</td>
+    <td>${esc(r.agent)}</td>
+    <td>${statusCell(r.status)}</td>
+    <td class="mono">${esc(r.model || '—')}</td>
+    <td class="num">${fmt.format(r.tokens ?? 0)}</td>
+    <td class="num">${r.duration_seconds == null ? '—' : r.duration_seconds.toFixed(2) + 's'}</td>
+    <td>${statusCell(r.policy)}</td>
+  </tr>`;
+}
+
+/* ---------- what the agent has learned ---------- */
+async function loadKnowledge() {
+  const host = $('knowledge');
+  try {
+    const k = await (await fetch('/_/knowledge')).json();
+
+    $('model-dot').className = 'dot ' + (k.model.ok ? 'live' : 'bad');
+    $('learn-meta').innerHTML = k.model.ok
+      ? `${esc(k.model.model)} · ${k.verified} verified · ${k.rejectedTotal} disproved · ${k.rounds} rounds`
+      : `<span class="s-critical">model offline — ${esc(k.model.reason)}</span>`;
+
+    const groups = Object.entries(k.byEndpoint);
+    if (!groups.length) {
+      host.innerHTML = '<div class="empty">nothing learned yet — run <span class="mono">node bin/learn.js</span></div>';
+      return;
+    }
+
+    host.innerHTML = groups.map(([endpoint, invariants]) => `
+      <div class="inv-group">${esc(endpoint)} · ${invariants.length}</div>
+      ${invariants.map(i => `
+        <div class="inv">
+          <div class="inv-head">
+            <span class="status s-good">${GLYPH.good}</span>
+            <span class="inv-stmt">${esc(i.statement)}</span>
+          </div>
+          <div class="inv-meta">${esc(i.predicate)} · ${i.rows ?? '—'} rows ·
+            confirmed ${i.confirmations}× · learned ${esc((i.verifiedAt || '').slice(0, 10))}</div>
+        </div>`).join('')}`).join('')
+      + (k.rejected.length ? `
+        <div class="inv-group">disproved and remembered · ${k.rejectedTotal}</div>
+        ${k.rejected.map(r => `
+          <div class="inv">
+            <div class="inv-head">
+              <span class="status s-critical">${GLYPH.critical}</span>
+              <span class="inv-stmt">${esc(r.statement)}</span>
+            </div>
+            <div class="inv-meta">${esc(r.endpoint)} — ${esc(r.why)}</div>
+          </div>`).join('')}` : '');
+  } catch (err) {
+    host.innerHTML = `<div class="empty">could not read the knowledge store — ${esc(err.message)}</div>`;
+  }
+}
+
+/* ---------- state ---------- */
+let feedCount = 0;
+
+async function load() {
+  $('refresh').disabled = true;
+  try {
+    const s = await (await fetch('/_/state')).json();
+    if (s.error) throw new Error(s.error.message);
+    $('origin').textContent = s.connection.origin;
+    $('conn-dot').className = 'dot live';
+    $('conn-text').innerHTML = `connected as <b>${esc(s.connection.user.email)}</b> · ${esc(s.connection.mode)}`;
+    $('ws').textContent = s.connection.workspace.name;
+    $('role').textContent = s.connection.role;
+    $('ws-pill').hidden = false;
+    renderKpis(s);
+    renderLine(s.series);
+    renderModels(s.models);
+    renderAgents(s.agents);
+    renderRuns(s.runs);
+    renderLog(s.telemetry, s.stats);
+  } catch (err) {
+    $('conn-dot').className = 'dot bad';
+    $('conn-text').textContent = `disconnected — ${err.message}`;
+  } finally {
+    $('refresh').disabled = false;
+  }
+}
+
+/* ---------- live feed ---------- */
+function follow() {
+  const es = new EventSource('/_/runs');
+  es.addEventListener('run', (evt) => {
+    const run = JSON.parse(evt.data).run;
+    if (!run) return;
+    const body = $('feed');
+    if (body.querySelector('.empty')) body.innerHTML = '';
+    body.insertAdjacentHTML('afterbegin', runRow(run, true));
+    while (body.rows.length > 60) body.deleteRow(body.rows.length - 1);
+    $('feed-count').textContent = ++feedCount;
+    $('feed-dot').className = 'dot live';
+  });
+  es.addEventListener('error', () => { $('feed-dot').className = 'dot bad'; });
+  es.addEventListener('open', () => { $('feed-dot').className = 'dot live'; });
+}
+
+/* ---------- test runner ---------- */
+$('run-tests').addEventListener('click', () => {
+  const btn = $('run-tests'), out = $('tests'), summary = $('test-summary');
+  btn.disabled = true; btn.textContent = '● running…';
+  out.innerHTML = ''; summary.hidden = true;
+  const counts = {};
+  const es = new EventSource(`/_/tests?pack=${encodeURIComponent($('pack').value)}`);
+
+  // TAP reports a suite *after* its subtests, so hold each group's tests until
+  // its suite line lands and flush them under it — the reading order a person
+  // expects, rather than the order the reporter happens to emit.
+  let pending = [];
+  const line = (t, isSuite) =>
+    `<div class="test-line ${isSuite ? 'suite' : ''}">
+       <span class="glyph ${t.pass ? 's-good' : 's-critical'}">${t.pass ? GLYPH.good : GLYPH.critical}</span>
+       <span class="test-name">${esc(t.name)}</span></div>`;
+
+  es.addEventListener('tap', (evt) => {
+    const t = JSON.parse(evt.data);
+    if (t.kind === 'count') { counts[t.key] = t.value; return; }
+    if (t.kind === 'skip') return;
+    if (t.suite) {
+      out.insertAdjacentHTML('beforeend', line(t, true) + pending.map(p => line(p, false)).join(''));
+      pending = [];
+    } else {
+      pending.push(t);
+    }
+    out.scrollTop = out.scrollHeight;
+  });
+
+  es.addEventListener('done', () => {
+    es.close();
+    if (pending.length) {          // anything outside a suite
+      out.insertAdjacentHTML('beforeend', pending.map(p => line(p, false)).join(''));
+      pending = [];
+    }
+    btn.disabled = false; btn.textContent = '▶ run tests';
+    const failed = Number(counts.fail || 0);
+    summary.hidden = false;
+    summary.innerHTML = `<span class="status ${failed ? 's-critical' : 's-good'}">
+      ${failed ? GLYPH.critical : GLYPH.good}
+      <b>${counts.pass || 0} passed, ${failed} failed</b></span> · ${counts.tests || 0} tests in ${
+      counts.duration_ms ? (Number(counts.duration_ms) / 1000).toFixed(1) + 's' : '—'}`;
+    load();
+    loadKnowledge();
+  });
+
+  es.addEventListener('error', () => {
+    es.close(); btn.disabled = false; btn.textContent = '▶ run tests';
+  });
+});
+
+const BLURB = {
+  smoke: 'Contract tests against the live control plane. Read-only.',
+  documented: 'Every test asserts a claim from the operator manual at /docs/. Read-only.',
+  learned: 'Re-checks every invariant the agent taught itself. Read-only.',
+  all: 'All three packs, back to back. Read-only.',
+};
+$('pack').addEventListener('change', () => { $('pack-blurb').textContent = BLURB[$('pack').value]; });
+
+$('refresh').addEventListener('click', load);
+$('theme').addEventListener('click', () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark');
+});
+
+load();
+loadKnowledge();
+follow();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
